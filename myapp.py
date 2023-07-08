@@ -1,55 +1,31 @@
 import streamlit as st
-import spacy 
-from textblob import TextBlob
 
-# Load English language model for spaCy
-nlp = spacy.load("en_core_web_sm")
+def sentiment_analysis(text):
+    positive_keywords = ['good', 'great', 'excellent', 'awesome', 'amazing']
+    negative_keywords = ['bad', 'terrible', 'poor', 'awful', 'horrible']
 
-# Perform sentiment analysis using TextBlob
-def perform_sentiment_analysis(text):
-    blob = TextBlob(text)
-    polarity = blob.sentiment.polarity
-    subjectivity = blob.sentiment.subjectivity
-    return polarity, subjectivity
+    words = text.lower().split()
+    positive_count = sum(keyword in words for keyword in positive_keywords)
+    negative_count = sum(keyword in words for keyword in negative_keywords)
 
-# Perform entity recognition using spaCy
-def perform_entity_recognition(text):
-    doc = nlp(text)
-    entities = [(ent.text, ent.label_) for ent in doc.ents]
-    return entities
+    if positive_count > negative_count:
+        return "Positive"
+    elif positive_count < negative_count:
+        return "Negative"
+    else:
+        return "Neutral"
 
-# Perform keyword extraction using spaCy
-def perform_keyword_extraction(text):
-    doc = nlp(text)
-    keywords = [token.text for token in doc if not token.is_stop and token.is_alpha]
-    return keywords
-
-# Streamlit app
 def main():
-    st.title("Text Analytics App")
-    
-    # User input
-    text = st.text_area("Enter your text here")
+    st.title("NLP Tool: Sentiment Analysis")
+
+    user_text = st.text_area("Enter text:", "")
 
     if st.button("Analyze"):
-        # Sentiment analysis
-        polarity, subjectivity = perform_sentiment_analysis(text)
-        st.write("Sentiment Analysis:")
-        st.write(f"Polarity: {polarity}")
-        st.write(f"Subjectivity: {subjectivity}")
+        if user_text.strip() != "":
+            result = sentiment_analysis(user_text)
+            st.write("Sentiment:", result)
+        else:
+            st.warning("Please enter some text.")
 
-        # Entity recognition
-        entities = perform_entity_recognition(text)
-        st.write("Entity Recognition:")
-        for entity, label in entities:
-            st.write(f"{entity} ({label})")
-
-        # Keyword extraction
-        keywords = perform_keyword_extraction(text)
-        st.write("Keywords:")
-        for keyword in keywords:
-            st.write(keyword)
-
-# Run the app
 if __name__ == "__main__":
     main()
