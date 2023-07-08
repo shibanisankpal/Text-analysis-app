@@ -1,16 +1,10 @@
 import streamlit as st
-from textblob import TextBlob
+from transformers import pipeline
 
 def sentiment_analysis(text):
-    blob = TextBlob(text)
-    polarity = blob.sentiment.polarity
-
-    if polarity > 0:
-        return "Positive"
-    elif polarity < 0:
-        return "Negative"
-    else:
-        return "Neutral"
+    classifier = pipeline("sentiment-analysis")
+    result = classifier(text)[0]
+    return result["label"]
 
 def main():
     st.title("NLP Tool: Sentiment Analysis")
