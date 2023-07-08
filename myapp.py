@@ -1,21 +1,24 @@
+
 import streamlit as st
+import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
 
 def sentiment_analysis(text):
-    positive_keywords = ['good', 'great', 'excellent', 'awesome', 'amazing']
-    negative_keywords = ['bad', 'terrible', 'poor', 'awful', 'horrible']
+    sid = SentimentIntensityAnalyzer()
+    sentiment_scores = sid.polarity_scores(text)
 
-    words = text.lower().split()
-    positive_count = sum(keyword in words for keyword in positive_keywords)
-    negative_count = sum(keyword in words for keyword in negative_keywords)
+    # Get the compound score, which represents the overall sentiment
+    compound_score = sentiment_scores['compound']
 
-    if positive_count > negative_count:
+    if compound_score >= 0.05:
         return "Positive"
-    elif positive_count < negative_count:
+    elif compound_score <= -0.05:
         return "Negative"
     else:
         return "Neutral"
 
 def main():
+    nltk.download('vader_lexicon')
     st.title("NLP Tool: Sentiment Analysis")
 
     user_text = st.text_area("Enter text:", "")
