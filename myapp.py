@@ -1,24 +1,18 @@
-
 import streamlit as st
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
+from textblob import TextBlob
 
 def sentiment_analysis(text):
-    sid = SentimentIntensityAnalyzer()
-    sentiment_scores = sid.polarity_scores(text)
+    blob = TextBlob(text)
+    polarity = blob.sentiment.polarity
 
-    # Get the compound score, which represents the overall sentiment
-    compound_score = sentiment_scores['compound']
-
-    if compound_score >= 0.05:
+    if polarity > 0:
         return "Positive"
-    elif compound_score <= -0.05:
+    elif polarity < 0:
         return "Negative"
     else:
         return "Neutral"
 
 def main():
-    nltk.download('vader_lexicon')
     st.title("NLP Tool: Sentiment Analysis")
 
     user_text = st.text_area("Enter text:", "")
