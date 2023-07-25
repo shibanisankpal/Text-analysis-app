@@ -1,4 +1,4 @@
 nltk
 textblob
 PyPDF2
-sklearn
+scikit-learn
