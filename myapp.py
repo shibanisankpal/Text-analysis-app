@@ -35,8 +35,6 @@ def extract_text_from_pdf(file):
         text += page.extract_text()
     return text
 
-# ... rest of the code remains the same ...
-
 
 def analyze_text(text):
     # Perform text analysis
